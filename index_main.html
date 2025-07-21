@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foras Capital - Organization</title>
+    <!-- Google Fonts - Source Sans Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="component.css">
+    <!-- React for interactivity -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root">
+        <div class="investment-organization">
+            <!-- Header -->
+            <div class="header-container">
+                <div class="header">
+                    <div class="left-side">
+                        <div class="logo">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEyIiBoZWlnaHQ9IjE5IiB2aWV3Qm94PSIwIDAgMTEyIDE5IiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTAgMTlWMEg4LjVWMTlIMFoiIGZpbGw9IiMxNzREM0QiLz4KPHN2Zz4K" alt="Logo">
+                        </div>
+                        <div class="top-row">
+                            <div class="header-tab">Projects</div>
+                            <div class="header-tab selected">Organization</div>
+                            <div class="header-tab">
+                                Messages
+                                <span class="counter">3</span>
+                            </div>
+                            <div class="header-tab">Settings</div>
+                        </div>
+                    </div>
+                    <div class="right-side">
+                        <button class="primary-button">
+                            <span class="button-icon">+</span>
+                            <span>Button</span>
+                        </button>
+                        <div class="user-info">
+                            <div class="user-avatar"></div>
+                            <span class="user-name">Dr. John Doe</span>
+                            <span class="dropdown-icon">▼</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-items">
+                    <div class="header-tab">Explore</div>
+                    <div class="header-tab">My profile</div>
+                    <div class="header-tab selected">My organization</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- Left Content -->
+                <div class="content-left">
+                    <!-- About Company Section -->
+                    <div class="about-company-section">
+                        <div class="header-pic"></div>
+                        
+                        <div class="company-header">
+                            <div class="company-info">
+                                <div class="company-logo">
+                                    <div class="edit-icon">✏️</div>
+                                </div>
+                                <div class="company-details">
+                                    <div class="company-name-row">
+                                        <h1>Foras Capital</h1>
+                                        <span class="company-type">Investment firm</span>
+                                    </div>
+                                    <div class="location-info">
+                                        <div class="location-item">
+                                            <span class="icon">📍</span>
+                                            <span><strong>HQ:</strong> Ireland</span>
+                                        </div>
+                                        <div class="location-item">
+                                            <span class="icon">🌍</span>
+                                            <span><strong>Active in:</strong> Netherlands, Belgium, Luxembourg</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- About Company Text -->
+                        <div class="about-section">
+                            <div class="section-header">
+                                <h2>About company</h2>
+                                <span class="edit-icon">✏️</span>
+                            </div>
+                            <div class="about-text">
+                                <p>We are looking to acquire an existing and successful business in full or a substantial majority in the Republic of Ireland or Northern Ireland. We offer a flexible and personalized process that aims to achieve a win-win outcome for all stakeholders.</p>
+                                
+                                <p>Post-acquisition, Sam will assume a full-time role as CEO, and his backers will be actively involved on the board. Sam and his investors bring tons of experience in running and growing businesses. They have a long-term horizon, and their objective is to nurture the team and grow the business that they will acquire.</p>
+                                
+                                <p>Sam is a seasoned CEO, entrepreneur, and ex-McKinsey consultant. He is result-driven and hard-working. As an experienced operator, he learned that the most important task as a leader is aligning different stakeholders on all levels to focus on implementing the business goals and objectives.</p>
+                                
+                                <p>Our objective is to build on your legacy, develop the team, and keep the business growing over the long term.</p>
+                                
+                                <p><strong>For more information, please contact us.</strong></p>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="contact-section">
+                            <div class="section-header">
+                                <h3>Contact information</h3>
+                                <span class="edit-icon">✏️</span>
+                            </div>
+                            <div class="contact-links">
+                                <div class="contact-item">
+                                    <span class="icon">💼</span>
+                                    <a href="#">Foras Capital</a>
+                                </div>
+                                <div class="contact-item">
+                                    <span class="icon">🌐</span>
+                                    <a href="#">forascapital.com</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investment Criteria Dynamic Section - PLACEHOLDER -->
+                    <div class="investment-criteria-section" id="investment-criteria-dynamic">
+                        <!-- El contenido completo se carga dinámicamente mediante JavaScript -->
+                    </div>
+
+                    <!-- Portfolio Companies -->
+                    <div class="portfolio-section">
+                        <div class="section-header">
+                            <h2>Portfolio companies</h2>
+                            <span class="edit-icon">✏️</span>
+                        </div>
+                        <div class="portfolio-companies">
+                            <div class="company-item">
+                                <div class="company-logo-small"></div>
+                                <span>Abbey International</span>
+                            </div>
+                            <div class="company-item">
+                                <div class="company-logo-small"></div>
+                                <span>Ethos Partners</span>
+                            </div>
+                            <div class="company-item">
+                                <div class="company-logo-small"></div>
+                                <span>ONE to ONE Asset Management</span>
+                            </div>
+                            <div class="company-item">
+                                <div class="company-logo-small"></div>
+                                <span>Scipio Holding</span>
+                            </div>
+                            <div class="company-item">
+                                <div class="company-logo-small"></div>
+                                <span>Moonbase Capital</span>
+                            </div>
+                            <div class="company-item">
+                                <div class="company-logo-small"></div>
+                                <span>Ambit Partners</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Projects -->
+                    <div class="active-projects-section">
+                        <div class="projects-header">
+                            <h2>Active projects</h2>
+                        </div>
+                        <div class="project-tabs">
+                            <div class="tab active">Sell-side</div>
+                            <div class="tab">Buy-side</div>
+                        </div>
+                        
+                        <div class="project-list">
+                            <div class="project-card">
+                                <div class="project-left">
+                                    <div class="project-date">April 8, 2023</div>
+                                    <h3>Product Feed Optimisation SaaS Company | United Kingdom</h3>
+                                    <p>The offered company is a leading product feed optimisation SaaS company, that has established an excellent reputation and growing client base. With self-built bespok...</p>
+                                    <div class="project-bottom">
+                                        <div class="location">
+                                            <span class="icon">📍</span>
+                                            <span>United Kingdom, North</span>
+                                        </div>
+                                        <div class="project-tags">
+                                            <span class="tag">Custom software development se...</span>
+                                            <span class="tag">IT hosting/cloud/Infrastructur...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-right">
+                                    <div class="revenue">
+                                        <div class="revenue-label">Revenue</div>
+                                        <div class="revenue-value">€ 2.670.000</div>
+                                    </div>
+                                    <div class="favorite-icon">♡</div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-left">
+                                    <div class="project-date">April 8, 2023</div>
+                                    <h3>Product Feed Optimisation SaaS Company | United Kingdom</h3>
+                                    <p>The offered company is a leading product feed optimisation SaaS company, that has established an excellent reputation and growing client base. With self-built bespok...</p>
+                                    <div class="project-bottom">
+                                        <div class="location">
+                                            <span class="icon">📍</span>
+                                            <span>United Kingdom, North</span>
+                                        </div>
+                                        <div class="project-tags">
+                                            <span class="tag">Custom software development se...</span>
+                                            <span class="tag">IT hosting/cloud/Infrastructur...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-right">
+                                    <div class="revenue">
+                                        <div class="revenue-label">Revenue</div>
+                                        <div class="revenue-value">€ 2.670.000</div>
+                                    </div>
+                                    <div class="favorite-icon">♡</div>
+                                </div>
+                            </div>
+
+                            <div class="project-card">
+                                <div class="project-left">
+                                    <div class="project-date">April 8, 2023</div>
+                                    <h3>Product Feed Optimisation SaaS Company | United Kingdom</h3>
+                                    <p>The offered company is a leading product feed optimisation SaaS company, that has established an excellent reputation and growing client base. With self-built bespok...</p>
+                                    <div class="project-bottom">
+                                        <div class="location">
+                                            <span class="icon">📍</span>
+                                            <span>United Kingdom, North</span>
+                                        </div>
+                                        <div class="project-tags">
+                                            <span class="tag">Custom software development se...</span>
+                                            <span class="tag">IT hosting/cloud/Infrastructur...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="project-right">
+                                    <div class="revenue">
+                                        <div class="revenue-label">Revenue</div>
+                                        <div class="revenue-value">€ 2.670.000</div>
+                                    </div>
+                                    <div class="favorite-icon">♡</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="show-more-btn">
+                            <span>Show more</span>
+                            <span class="chevron">▼</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="sidebar">
+                    <!-- Privacy Settings -->
+                    <div class="privacy-settings">
+                        <div class="section-header">
+                            <h3>Privacy settings</h3>
+                            <span class="settings-icon">⚙️</span>
+                        </div>
+                        <div class="privacy-info">
+                            <div class="privacy-title">Organization page</div>
+                            <div class="privacy-status">Visible for everyone</div>
+                        </div>
+                    </div>
+
+                    <!-- Contacts -->
+                    <div class="contacts-section">
+                        <div class="section-header">
+                            <h3>Contacts <span class="count">50</span></h3>
+                            <span class="settings-icon">⚙️</span>
+                        </div>
+                        <div class="contact-stats">
+                            <div class="stat">
+                                <span class="stat-label">Shown</span>
+                                <span class="stat-value">8</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Hidden</span>
+                                <span class="stat-value">42</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-list">
+                            <div class="contact-item">
+                                <div class="contact-avatar"></div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Daan van der Berg</div>
+                                    <div class="contact-role">SEO</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-avatar"></div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Bram Jansen</div>
+                                    <div class="contact-role">M&A Analyst</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-avatar"></div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Lotte van der Linden</div>
+                                    <div class="contact-role">Due Diligence Specialist</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-avatar"></div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Dutch Van Der Linde</div>
+                                    <div class="contact-role">Deal Structuring Specialist</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-avatar"></div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Casper van den Heuvel</div>
+                                    <div class="contact-role">M&A Advisor</div>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-avatar"></div>
+                                <div class="contact-info">
+                                    <div class="contact-name">Maaike van der Wal</div>
+                                    <div class="contact-role">Valuation Analyst</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="show-more-btn">
+                            <span>Show more</span>
+                            <span class="chevron">▼</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Investment Criteria Modal -->
+    <div class="modal-overlay" id="investment-modal" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title-container">
+                    <button class="modal-nav-arrow modal-nav-left" id="modal-nav-left" onclick="navigateModalCriteria(-1)" style="display: none;">‹</button>
+                    <h2 id="modal-title">Investment criteria</h2>
+                    <button class="modal-nav-arrow modal-nav-right" id="modal-nav-right" onclick="navigateModalCriteria(1)" style="display: none;">›</button>
+                </div>
+                <button class="close-btn" onclick="closeInvestmentModal()">✕</button>
+            </div>
+            <div class="modal-body">
+
+
+<!-- Title -->
+<div class="modal-section">
+    <h3 style="margin-bottom: 2px;">Title </h3>
+    <input 
+        type="text" 
+        id="criteria-title" 
+        class="currency-input" 
+        placeholder="Enter a title for this criteria set" 
+        maxlength="100" 
+        required
+        style="width: 33ch; margin-bottom: 8px; margin-top: 0; display: inline-block; text-align: left;"
+    >
+</div>
+
+<!-- Description -->
+<div class="modal-section">
+    <h3 style="margin-bottom: 4px;">Description</h3>
+    <textarea 
+        id="criteria-description" 
+        class="currency-input" 
+        placeholder="Add a short description (optional)" 
+        maxlength="300"
+        rows="2"
+        style="width: 33ch; resize: vertical; margin-top: 0; display: inline-block; text-align: left;"
+    ></textarea>
+</div>
+
+
+                <!-- Growth Percentage -->
+                <div class="modal-section">
+                    <h3>Growth Percentage</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="growth" value="5-15" checked> 
+                            <span>5%-15% growth per year</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="growth" value="15-30" checked> 
+                            <span>15%-30% growth per year</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="growth" value="30+"> 
+                            <span>30% growth per year or more</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="growth" value="decline"> 
+                            <span>In decline</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="growth" value="mature"> 
+                            <span>Hardly growing or declining (mature phase)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Profitability -->
+                <div class="modal-section">
+                    <h3>Profitability</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="profitability" value="profitable" checked> 
+                            <span>Profitable</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="profitability" value="non-profitable"> 
+                            <span>Non-profitable</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Equity Stake -->
+                <div class="modal-section">
+                    <h3>Equity stake</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="equity" value="minority"> 
+                            <span>Minority</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="equity" value="majority"> 
+                            <span>Majority</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="equity" value="100" checked> 
+                            <span>100% sale</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Investment Strategy -->
+                <div class="modal-section">
+                    <h3>Investment strategy</h3>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="strategy" value="proactive" checked> 
+                            <span>Proactive Acquisition Strategy</span>
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="strategy" value="open"> 
+                            <span>Open to opportunities</span>
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="strategy" value="not-acquiring"> 
+                            <span>Not currently acquiring</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Revenue Range -->
+                <div class="modal-section">
+                    <h3>Revenue*</h3>
+                    <div class="currency-range-inputs">
+                        <span class="currency-symbol">€</span>
+                        <input type="text" id="revenue-min" class="currency-input" value="1">
+                        <span class="currency-unit">million</span>
+                        <span class="range-separator">to</span>
+                        <span class="currency-symbol">€</span>
+                        <input type="text" id="revenue-max" class="currency-input" value="100">
+                        <span class="currency-unit">million</span>
+                    </div>
+                </div>
+
+                <!-- EBITDA Range -->
+                <div class="modal-section">
+                    <h3>EBITDA range</h3>
+                    <div class="currency-range-inputs">
+                        <span class="currency-symbol">€</span>
+                        <input type="text" id="ebitda-min" class="currency-input" value="0">
+                        <span class="currency-unit">million</span>
+                        <span class="range-separator">to</span>
+                        <span class="currency-symbol">€</span>
+                        <input type="text" id="ebitda-max" class="currency-input" value="10">
+                        <span class="currency-unit">million</span>
+                    </div>
+                </div>
+
+                <!-- Countries -->
+                <div class="modal-section">
+                    <h3>Countries</h3>
+                    <div class="countries-tree">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="countries" value="worldwide" onchange="toggleWorldwide(this)"> 
+                            <span>Worldwide</span>
+                        </label>
+                        <div class="countries-subcategories" style="margin-left: 32px;">
+                            <div class="country-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="countries" value="europe" checked> 
+                                    <span>Europe</span>
+                                </label>
+                            </div>
+                            <div class="country-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="countries" value="north-america"> 
+                                    <span>North America</span>
+                                </label>
+                            </div>
+                            <div class="country-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="countries" value="asia"> 
+                                    <span>Asia</span>
+                                </label>
+                            </div>
+                            <div class="country-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="countries" value="south-america"> 
+                                    <span>South America</span>
+                                </label>
+                            </div>
+                            <div class="country-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="countries" value="africa"> 
+                                    <span>Africa</span>
+                                </label>
+                            </div>
+                            <div class="country-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="countries" value="oceania"> 
+                                    <span>Oceania</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sectors -->
+                <div class="modal-section">
+                    <h3>Sectors and subsectors</h3>
+                    <div class="sectors-container">
+                        <div class="search-box">
+                            <input type="text" placeholder="Search" id="sector-search" oninput="filterSectors(this.value)">
+                        </div>
+                        <div class="sectors-grid" id="sectors-grid">
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="agri-food"><span>Agri & Food</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="automobile"><span>Automobile & Parts</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="banks"><span>Banks</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="basic-resources"><span>Basic Resources</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="business-services"><span>Business Services</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="chemicals"><span>Chemicals</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="consumer-products"><span>Consumer products & Services</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="energy"><span>Energy</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="financial-services"><span>Financial Services</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="health-care"><span>Health and Care</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="industry"><span>Industry</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="insurance"><span>Insurance</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="media"><span>Media</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="personal-care"><span>Personal Care & Drug Stores</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="real-estate"><span>Real Estate</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="retail"><span>Retail</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="technology"><span>Technology</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="telecommunications"><span>Telecommunications</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="transport-logistics"><span>Transport & Logistics</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="travel-leisure"><span>Travel and Leisure</span></label>
+                            <label class="sector-item"><input type="checkbox" name="sectors" value="utilities"><span>Utilities</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeInvestmentModal()">Cancel</button>
+                <button class="save-btn" onclick="saveInvestmentCriteria()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Investment Criteria JavaScript -->
+    <script src="investment-criteria.js"></script>
+</body>
+</html> 
