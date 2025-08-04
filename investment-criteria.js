@@ -20,9 +20,77 @@ function getCurrentCriteria() {
 }
 
 // Modal functions
+function openNewCriteriaModal() {
+    // Marcar que estamos añadiendo un criterio nuevo
+    isEditingExisting = false;
+    
+    // Limpiar el modal para nuevo criterio
+    clearModalForm();
+    
+    // Ocultar botón de remove criteria (es nuevo)
+    document.getElementById('remove-criteria-btn').style.display = 'none';
+    
+    // Ocultar mensaje de confirmación
+    document.getElementById('remove-confirmation').style.display = 'none';
+    
+    // Añadir clase para distribuir botones cuando no hay remove button
+    document.querySelector('.modal-footer').classList.add('no-remove-btn');
+    
+    document.getElementById('investment-modal').style.display = 'flex';
+    
+    // Hacer focus en el primer input
+    setTimeout(() => {
+        const titleInput = document.getElementById('criteria-title');
+        if (titleInput) {
+            titleInput.focus();
+        }
+    }, 100);
+}
+
+function handleSaveCriteria() {
+    // Guardar si es nuevo criterio o edición
+    const isNewCriteria = !isEditingExisting;
+    const criteriaTitle = document.getElementById('criteria-title').value || '';
+    
+    // Llamar a la función normal de guardar
+    saveInvestmentCriteria();
+    
+    // Mostrar toast apropiado
+    if (isNewCriteria) {
+        setTimeout(() => {
+            showUndoToast();
+        }, 100);
+    } else {
+        // Es una edición
+        setTimeout(() => {
+            showEditToast(criteriaTitle);
+        }, 100);
+    }
+}
+
 function openInvestmentModal() {
     // Marcar que estamos editando un criterio existente
     isEditingExisting = true;
+    
+    // Guardar el estado anterior para poder hacer undo
+    if (allCriteria[currentCriteriaIndex]) {
+        previousCriteriaState = JSON.parse(JSON.stringify(allCriteria[currentCriteriaIndex]));
+    }
+    
+    // Mostrar botón de remove criteria solo si hay 2 o más criterios
+    const removeBtn = document.getElementById('remove-criteria-btn');
+    const modalFooter = document.querySelector('.modal-footer');
+    
+    if (allCriteria.length >= 2) {
+        removeBtn.style.display = 'flex';
+        modalFooter.classList.remove('no-remove-btn');
+    } else {
+        removeBtn.style.display = 'none';
+        modalFooter.classList.add('no-remove-btn');
+    }
+    
+    // Ocultar mensaje de confirmación
+    document.getElementById('remove-confirmation').style.display = 'none';
     
     // Cargar los datos del criterio actual en el modal
     loadCriteriaIntoModal();
@@ -149,6 +217,25 @@ function clearModalFields() {
 
 function closeInvestmentModal() {
     document.getElementById('investment-modal').style.display = 'none';
+    
+    // DIRTY: Scroll directo al panel
+    setTimeout(() => {
+        // Buscar el elemento por clase y hacer scroll inmediato
+        const element = document.querySelector('.investment-criteria-dynamic') || 
+                       document.querySelector('[class*="investment-criteria"]') ||
+                       document.querySelector('[class*="criteria-dynamic"]');
+        
+        if (element) {
+            // Scroll más suave, no tan arriba
+            const rect = element.getBoundingClientRect();
+            const offset = window.pageYOffset + rect.top - 200; // 200px desde arriba
+            window.scrollTo(0, offset);
+        } else {
+            // Fallback: scroll a una posición fija
+            window.scrollTo(0, 600);
+        }
+    }, 50);
+    
     // Resetear flag de edición
     isEditingExisting = false;
 }
@@ -225,6 +312,8 @@ function saveInvestmentCriteria() {
     closeInvestmentModal();
 }
 
+let maxCriteriaHeight = 0;
+
 function updateInvestmentCriteriaDisplay() {
     const investmentDynamic = document.getElementById('investment-criteria-dynamic');
     
@@ -242,12 +331,18 @@ function updateInvestmentCriteriaDisplay() {
         const canAddMore = allCriteria.length < MAX_CRITERIA;
         let html = `
             <div class="section-header">
-                <h2>Investment Criteria ${canAddMore ? `<a href="#" id="add-criteria-link" onclick="openNewCriteriaModal(); return false;">Add criteria</a>` : ''}</h2>
-                <button class="edit-icon-btn" onclick="openInvestmentModal()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 20.0001H20M4 20.0001V16.0001L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L8 20.0001L4 20.0001Z" stroke="#6B9286" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <h2>Investment Criteria</h2>
+                <div class="header-actions">
+                    <button class="add-criteria-btn" onclick="openNewCriteriaModal()" ${!canAddMore ? 'disabled' : ''}>
+                        <span class="plus-icon">+</span>
+                        <span>Add criteria</span>
+                    </button>
+                    <button class="edit-icon-btn" onclick="openInvestmentModal()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 20.0001H20M4 20.0001V16.0001L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L8 20.0001L4 20.0001Z" stroke="#6B9286" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
             </div>`;
         
         // Mostrar mensaje de límite alcanzado si es necesario
@@ -255,43 +350,48 @@ function updateInvestmentCriteriaDisplay() {
             html += `<div class="max-criteria-message">Maximum of 10 criteria reached.</div>`;
         }
             
-        // Agregar título y descripción del criterio actual con navegación
+        // Container principal con arrows y contenido
         const currentCriteria = getCurrentCriteria();
         if (currentCriteria && currentCriteria.title) {
-            const showLeftArrow = currentCriteriaIndex > 0;
-            const showRightArrow = currentCriteriaIndex < allCriteria.length - 1;
+                    const showLeftArrow = allCriteria.length > 1;
+        const showRightArrow = allCriteria.length > 1;
             
-            // Container para la navegación completa
-            html += `<div class="criteria-navigation-container">
-                ${showLeftArrow ? `<button class="nav-arrow nav-left" onclick="navigateCriteria(-1)">‹</button>` : '<div class="nav-placeholder"></div>'}
-                <div class="criteria-title-description">
-                    <div class="criteria-title-display">
-                        <h3>Title ${currentCriteria.title}</h3>
-                    </div>`;
+            // Container principal con arrows a los lados
+            html += `<div class="criteria-main-container">
+                ${showLeftArrow ? `<button class="criteria-nav-arrow criteria-nav-left" onclick="navigateCriteria(-1)">‹</button>` : '<div class="criteria-nav-placeholder"></div>'}
+                
+                <div class="criteria-content-wrapper">
+                    <!-- Card de título/descripción rediseñada -->
+                    <div class="criteria-title-card">
+                        <div class="criteria-card-icon">
+                            <div class="criteria-icon-circle">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 7H21L19 19H5L3 7Z" stroke="#174D3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3 7L2 3H1" stroke="#174D3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="9" cy="21" r="1" stroke="#174D3D" stroke-width="2"/>
+                                    <circle cx="20" cy="21" r="1" stroke="#174D3D" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="criteria-card-content">
+                            <h3>${currentCriteria.title}</h3>`;
             if (currentCriteria.description) {
-                html += `<div class="criteria-description-display">
-                        <span>${currentCriteria.description}</span>
-                    </div>`;
+                html += `<p>${currentCriteria.description}</p>`;
             }
-            html += `</div>
-                ${showRightArrow ? `<button class="nav-arrow nav-right" onclick="navigateCriteria(1)">›</button>` : '<div class="nav-placeholder"></div>'}
-            </div>`;
-            
-            // Agregar puntos de paginación
-            if (allCriteria.length > 1) {
-                html += `<div class="criteria-pagination">`;
-                for (let i = 0; i < allCriteria.length; i++) {
-                    html += `<span class="pagination-dot ${i === currentCriteriaIndex ? 'active' : ''}" onclick="goToCriteria(${i})"></span>`;
-                }
-                html += `</div>`;
-            }
-        }
+            html += `    </div>
+                    </div>
+                    
+                    <!-- Grid de cards de criterios -->
+                    <div class="criteria-display-grid">`;
         
-        html += `<div class="criteria-display-grid">`;
+        // Check if both cards exist for full-width logic
+        const hasGrowth = currentCriteria.growth.length > 0;
+        const hasOtherInfo = currentCriteria.profitability.length > 0 || currentCriteria.equity.length > 0;
         
         // Growth Percentage (Top Left)
-        if (currentCriteria.growth.length > 0) {
-            html += '<div class="criteria-card"><h4>Growth Percentage</h4><ul>';
+        if (hasGrowth) {
+            const fullWidth = !hasOtherInfo ? ' full-width' : '';
+            html += `<div class="criteria-card${fullWidth}"><h4>Growth Percentage</h4><ul>`;
             currentCriteria.growth.forEach(item => {
                 const labels = {
                     '5-15': '<span class="semibold">5%-15%</span> growth per year',
@@ -307,32 +407,10 @@ function updateInvestmentCriteriaDisplay() {
             html += '<div class="criteria-card empty"></div>';
         }
 
-        // Countries (Top Right)
-        if (currentCriteria.countries.length > 0) {
-            html += '<div class="criteria-card"><h4>Countries</h4><ul>';
-            currentCriteria.countries.forEach(country => {
-                const labels = {
-                    'worldwide': 'Worldwide',
-                    'europe': 'Europe',
-                    'north-america': 'North America',
-                    'asia': 'Asia',
-                    'south-america': 'South America',
-                    'africa': 'Africa',
-                    'oceania': 'Oceania',
-                    'ireland': 'Ireland',
-                    'uk': 'United Kingdom'
-                };
-                // Mostrar exactamente lo que está seleccionado en la modal
-                html += `<li>${labels[country] || country}</li>`;
-            });
-            html += '</ul></div>';
-        } else {
-            html += '<div class="criteria-card empty"></div>';
-        }
-
         // Other Information (Bottom Left)
-        if (currentCriteria.profitability.length > 0 || currentCriteria.equity.length > 0) {
-            html += '<div class="criteria-card other-info-card"><h4>Other information</h4>';
+        if (hasOtherInfo) {
+            const fullWidth = !hasGrowth ? ' full-width' : '';
+            html += `<div class="criteria-card other-info-card${fullWidth}"><h4>Other information</h4>`;
             html += '<div class="other-info-content">';
             
             // Profitability
@@ -361,10 +439,10 @@ function updateInvestmentCriteriaDisplay() {
             }
             html += '</div></div>';
 
-            // Company Size (Bottom Right)
-            if (currentCriteria.revenueMin || currentCriteria.revenueMax || 
+        // Company Size (Always full-width)
+        if (currentCriteria.revenueMin || currentCriteria.revenueMax || 
                 currentCriteria.ebitdaMin || currentCriteria.ebitdaMax) {
-                html += '<div class="criteria-card company-size-card"><h4>Company size</h4>';
+                html += '<div class="criteria-card company-size-card full-width"><h4>Company size</h4>';
                 html += '<div class="company-size-content">';
                 
                 // Revenue range
@@ -391,45 +469,34 @@ function updateInvestmentCriteriaDisplay() {
                 html += '<div class="criteria-card empty"></div>';
             }
         } else {
-            // Si no hay Other Information, mostrar Company Size en bottom left
             html += '<div class="criteria-card empty"></div>';
-            if (currentCriteria.revenueMin || currentCriteria.revenueMax || 
-                currentCriteria.ebitdaMin || currentCriteria.ebitdaMax) {
-                html += '<div class="criteria-card company-size-card"><h4>Company size</h4>';
-                html += '<div class="company-size-content">';
-                
-                // Revenue range
-                if (currentCriteria.revenueMin || currentCriteria.revenueMax) {
-                    const revenueMin = currentCriteria.revenueMin || '';
-                    const revenueMax = currentCriteria.revenueMax || '';
-                    html += `<div class="size-item">
-                        <span class="size-label">Revenue range</span>
-                        <div class="size-value">${revenueMin} - ${revenueMax}</div>
-                    </div>`;
-                }
-                
-                // EBITDA range
-                if (currentCriteria.ebitdaMin || currentCriteria.ebitdaMax) {
-                    const ebitdaMin = currentCriteria.ebitdaMin || '';
-                    const ebitdaMax = currentCriteria.ebitdaMax || '';
-                    html += `<div class="size-item">
-                        <span class="size-label">EBITDA range</span>
-                        <div class="size-value">${ebitdaMin} - ${ebitdaMax}</div>
-                    </div>`;
-                }
-                html += '</div></div>';
-            } else {
-                html += '<div class="criteria-card empty"></div>';
-            }
+        }
+
+        // Countries (Always full-width)
+        if (currentCriteria.countries.length > 0) {
+            html += '<div class="criteria-card full-width"><h4>Countries</h4><ul>';
+            currentCriteria.countries.forEach(country => {
+                const labels = {
+                    'worldwide': 'Worldwide',
+                    'europe': 'Europe',
+                    'north-america': 'North America',
+                    'asia': 'Asia',
+                    'south-america': 'South America',
+                    'africa': 'Africa',
+                    'oceania': 'Oceania',
+                    'ireland': 'Ireland',
+                    'uk': 'United Kingdom'
+                };
+                html += `<li>${labels[country] || country}</li>`;
+            });
+            html += '</ul></div>';
+        } else {
+            html += '<div class="criteria-card empty"></div>';
         }
         
-        // Cerrar el grid
-        html += '</div>';
-
-        // Sectors - Full Width Section (fuera del grid)
+        // Sectors (Always full-width)
         if (currentCriteria.sectors.length > 0) {
-            html += '<div class="sectors-section"><h4>Sectors <button class="edit-icon-btn" onclick="openInvestmentModal()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20.0001H20M4 20.0001V16.0001L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L8 20.0001L4 20.0001Z" stroke="#6B9286" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></h4>';
-            html += '<div class="sectors-tags-display">';
+            html += '<div class="criteria-card full-width"><h4>Sectors</h4><div class="sectors-tags-display">';
             currentCriteria.sectors.forEach(sector => {
                 const labels = {
                     'agri-food': 'Agri & Food',
@@ -459,18 +526,141 @@ function updateInvestmentCriteriaDisplay() {
             html += '</div></div>';
         }
 
+        // Contar cuántas cards tienen contenido en el criterio actual
+        let filledCards = 0;
+        if (hasGrowth) filledCards++;
+        if (hasOtherInfo) filledCards++;
+        if (currentCriteria.revenueMin || currentCriteria.revenueMax || currentCriteria.ebitdaMin || currentCriteria.ebitdaMax) filledCards++;
+        if (currentCriteria.countries.length > 0) filledCards++;
+        if (currentCriteria.sectors.length > 0) filledCards++;
+        
+        // Añadir banner según el número de cards con contenido
+        if (filledCards <= 2) {
+            // Verificar si es el primer criterio con 0-2 cards
+            let isFirstWithFewCards = true;
+            for (let i = 0; i < currentCriteriaIndex; i++) {
+                const criteria = allCriteria[i];
+                let otherFilledCards = 0;
+                if (criteria.growth.length > 0) otherFilledCards++;
+                if (criteria.profitability.length > 0 || criteria.equity.length > 0) otherFilledCards++;
+                if (criteria.revenueMin || criteria.revenueMax || criteria.ebitdaMin || criteria.ebitdaMax) otherFilledCards++;
+                if (criteria.countries.length > 0) otherFilledCards++;
+                if (criteria.sectors.length > 0) otherFilledCards++;
+                
+                if (otherFilledCards <= 2) {
+                    isFirstWithFewCards = false;
+                    break;
+                }
+            }
+            
+            if (isFirstWithFewCards) {
+                // Banner completo para 0-2 cards
+                html += `
+                    <div class="criteria-banner">
+                        <div class="banner-illustration">
+                            <img src="http://localhost:3845/assets/177c2b0ea0ab3bb3fc3dcebac1c57dfea38e2f9d.png" alt="Add criteria illustration" width="168" height="96" />
+                        </div>
+                        <div class="banner-content">
+                            <p class="banner-text">Most buyers who define at least 3 criteria receive significantly better matches.</p>
+                            <button class="banner-btn" onclick="openInvestmentModal()">Add more criteria</button>
+                        </div>
+                    </div>`;
+            } else {
+                // Solo texto sutil en criterios posteriores con 0-2 cards
+                html += `
+                    <div class="criteria-hint">
+                        <p class="hint-text">Add more details to improve match quality</p>
+                    </div>`;
+            }
+        } else if (filledCards >= 3 && filledCards <= 4) {
+            // Verificar si es el primer criterio con 3-4 cards
+            let isFirstWithMediumCards = true;
+            for (let i = 0; i < currentCriteriaIndex; i++) {
+                const criteria = allCriteria[i];
+                let otherFilledCards = 0;
+                if (criteria.growth.length > 0) otherFilledCards++;
+                if (criteria.profitability.length > 0 || criteria.equity.length > 0) otherFilledCards++;
+                if (criteria.revenueMin || criteria.revenueMax || criteria.ebitdaMin || criteria.ebitdaMax) otherFilledCards++;
+                if (criteria.countries.length > 0) otherFilledCards++;
+                if (criteria.sectors.length > 0) otherFilledCards++;
+                
+                if (otherFilledCards >= 3 && otherFilledCards <= 4) {
+                    isFirstWithMediumCards = false;
+                    break;
+                }
+            }
+            
+            if (isFirstWithMediumCards) {
+                // Banner completo para 3-4 cards
+                html += `
+                    <div class="criteria-banner">
+                        <div class="banner-illustration">
+                            <img src="http://localhost:3845/assets/795bf570314b3bf842d3c6e35131a3d9788099eb.png" alt="Analytics illustration" width="168" height="96" />
+                        </div>
+                        <div class="banner-content">
+                            <p class="banner-text">Top buyers define all criteria and receive personalized matches and better opportunities</p>
+                            <button class="banner-btn" onclick="openInvestmentModal()">Add more criteria</button>
+                        </div>
+                    </div>`;
+            } else {
+                // Solo texto sutil en criterios posteriores con 3-4 cards
+                html += `
+                    <div class="criteria-hint">
+                        <p class="hint-text">Add more details to improve match quality</p>
+                    </div>`;
+            }
+        }
+        // 5+ cards: Sin banner (criterio completo)
+
+        // Cerrar el grid
+        html += '</div>';
+        
+                    
+                    // Cerrar el content wrapper
+                    html += `</div>
+                
+                ${showRightArrow ? `<button class="criteria-nav-arrow criteria-nav-right" onclick="navigateCriteria(1)">›</button>` : '<div class="criteria-nav-placeholder"></div>'}
+            </div>`;
+            
+            // Paginación debajo del banner
+            if (allCriteria.length > 1) {
+                html += `<div class="criteria-pagination">`;
+                for (let i = 0; i < allCriteria.length; i++) {
+                    html += `<span class="pagination-dot ${i === currentCriteriaIndex ? 'active' : ''}" onclick="goToCriteria(${i})"></span>`;
+                }
+                html += `</div>`;
+            }
+        }
+
         investmentDynamic.innerHTML = html;
+        // Ajustar altura dinámica basada en la card más alta
+        setTimeout(() => {
+            const wrapper = investmentDynamic.querySelector('.criteria-content-wrapper');
+            if (wrapper) {
+                const h = wrapper.offsetHeight;
+                if (h > maxCriteriaHeight) {
+                    maxCriteriaHeight = h;
+                }
+                wrapper.style.minHeight = maxCriteriaHeight + 'px';
+            }
+        }, 0);
     } else {
         // Si no hay criterios, mostrar placeholder con header
         const canAddMore = allCriteria.length < MAX_CRITERIA;
         investmentDynamic.innerHTML = `
             <div class="section-header">
-                <h2>Investment Criteria ${canAddMore ? `<a href="#" id="add-criteria-link" onclick="openNewCriteriaModal(); return false;">Add criteria</a>` : ''}</h2>
-                <button class="edit-icon-btn" onclick="openInvestmentModal()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 20.0001H20M4 20.0001V16.0001L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L8 20.0001L4 20.0001Z" stroke="#6B9286" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <h2>Investment Criteria</h2>
+                <div class="header-actions">
+                    <button class="add-criteria-btn" onclick="openNewCriteriaModal()" ${!canAddMore ? 'disabled' : ''}>
+                        <span class="plus-icon">+</span>
+                        <span>Add criteria</span>
+                    </button>
+                    <button class="edit-icon-btn" onclick="openInvestmentModal()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 20.0001H20M4 20.0001V16.0001L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L8 20.0001L4 20.0001Z" stroke="#6B9286" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
             ${!canAddMore ? `<div class="max-criteria-message">Maximum of 10 criteria reached.</div>` : ''}
             <div class="criteria-placeholder">
@@ -533,10 +723,14 @@ window.testTitleDescription = testTitleDescription;
 // Navigation functions
 function navigateCriteria(direction) {
     const newIndex = currentCriteriaIndex + direction;
-    if (newIndex >= 0 && newIndex < allCriteria.length) {
+    if (newIndex >= allCriteria.length) {
+        currentCriteriaIndex = 0; // De 5 va a 1
+    } else if (newIndex < 0) {
+        currentCriteriaIndex = allCriteria.length - 1; // De 1 va a 5
+    } else {
         currentCriteriaIndex = newIndex;
-        updateInvestmentCriteriaDisplay();
     }
+    updateInvestmentCriteriaDisplay();
 }
 
 function goToCriteria(index) {
@@ -710,8 +904,341 @@ function testAllNavigationCases() {
     }, 500);
 }
 
+// Toast notification functions
+let toastTimeout;
+let previousCriteriaState = null;
+
+function showUndoToast() {
+    // Limpiar toast anterior si existe
+    hideToast();
+    
+    // Crear toast
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.id = 'undo-toast';
+    
+    toast.innerHTML = `
+        <div class="toast-icon"></div>
+        <div class="toast-content">
+            <div class="toast-title">Added a new criteria in "My organization"</div>
+            <div class="toast-message">Add criterias to find the best propositions</div>
+            <div class="toast-actions">
+                <button class="toast-undo" onclick="undoLastCriteria()">Undo</button>
+            </div>
+        </div>
+        <button class="toast-close" onclick="hideToast()">×</button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Mostrar con animación
+    setTimeout(() => {
+        toast.classList.add('show');
+        // Hacer blink del panel investment criteria dynamic
+        blinkInvestmentPanel();
+    }, 10);
+    
+    // Auto-hide después de 5 segundos
+    toastTimeout = setTimeout(() => {
+        hideToast();
+    }, 5000);
+}
+
+function showEditToast(criteriaTitle) {
+    // Limpiar toast anterior si existe
+    hideToast();
+    
+    // Crear toast
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.id = 'edit-toast';
+    
+    // Usar el nombre del criterio si está disponible
+    const displayTitle = criteriaTitle ? `"${criteriaTitle}"` : 'criteria';
+    
+    toast.innerHTML = `
+        <div class="toast-icon"></div>
+        <div class="toast-content">
+            <div class="toast-title">The ${displayTitle} was edited</div>
+            <div class="toast-actions">
+                <button class="toast-undo" onclick="undoEdit()">Undo</button>
+            </div>
+        </div>
+        <button class="toast-close" onclick="hideToast()">×</button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Mostrar con animación
+    setTimeout(() => {
+        toast.classList.add('show');
+        // Hacer blink del panel investment criteria dynamic
+        blinkInvestmentPanel();
+    }, 10);
+    
+    // Auto-hide después de 5 segundos
+    toastTimeout = setTimeout(() => {
+        hideToast();
+    }, 5000);
+}
+
+function showRemoveToast(criteriaTitle, removedCriteria, removedIndex) {
+    // Limpiar toast anterior si existe
+    hideToast();
+    
+    // Crear toast
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.id = 'remove-toast';
+    
+    // Usar el nombre del criterio
+    const displayTitle = criteriaTitle ? `"${criteriaTitle}"` : 'criteria';
+    
+    toast.innerHTML = `
+        <div class="toast-icon"></div>
+        <div class="toast-content">
+            <div class="toast-title">The ${displayTitle} was removed</div>
+            <div class="toast-actions">
+                <button class="toast-undo" onclick="undoRemove()">Undo</button>
+            </div>
+        </div>
+        <button class="toast-close" onclick="hideToast()">×</button>
+    `;
+    
+    // Guardar datos para el undo
+    window.lastRemovedCriteria = {
+        criteria: removedCriteria,
+        index: removedIndex
+    };
+    
+    document.body.appendChild(toast);
+    
+    // Mostrar con animación
+    setTimeout(() => {
+        toast.classList.add('show');
+        // Hacer blink del panel investment criteria dynamic
+        blinkInvestmentPanel();
+    }, 10);
+    
+    // Auto-hide después de 5 segundos
+    toastTimeout = setTimeout(() => {
+        hideToast();
+    }, 5000);
+}
+
+function hideToast() {
+    const undoToast = document.getElementById('undo-toast');
+    const editToast = document.getElementById('edit-toast');
+    const removeToast = document.getElementById('remove-toast');
+    
+    [undoToast, editToast, removeToast].forEach(toast => {
+        if (toast) {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }
+    });
+    
+    if (toastTimeout) {
+        clearTimeout(toastTimeout);
+    }
+}
+
+function undoLastCriteria() {
+    if (allCriteria.length > 0) {
+        // Eliminar el último criterio (el que se acaba de crear)
+        allCriteria.pop();
+        
+        // Si no quedan criterios, resetear todo
+        if (allCriteria.length === 0) {
+            currentCriteriaIndex = 0;
+        } else {
+            // Si el índice actual apunta al criterio eliminado o más allá, 
+            // ir al último criterio disponible
+            if (currentCriteriaIndex >= allCriteria.length) {
+                currentCriteriaIndex = allCriteria.length - 1;
+            }
+            // Si estábamos en un criterio anterior, mantener la posición
+        }
+        
+        // Actualizar visualización
+        updateInvestmentCriteriaDisplay();
+        
+        // Hacer blink del panel
+        setTimeout(() => {
+            blinkInvestmentPanel();
+        }, 100);
+        
+        // Ocultar toast
+        hideToast();
+    }
+}
+
+function undoEdit() {
+    if (previousCriteriaState && allCriteria[currentCriteriaIndex]) {
+        // Restaurar el estado anterior
+        allCriteria[currentCriteriaIndex] = JSON.parse(JSON.stringify(previousCriteriaState));
+        
+        // Actualizar visualización
+        updateInvestmentCriteriaDisplay();
+        
+        // Hacer blink del panel
+        setTimeout(() => {
+            blinkInvestmentPanel();
+        }, 100);
+        
+        // Limpiar el estado anterior
+        previousCriteriaState = null;
+        
+        // Ocultar toast
+        hideToast();
+    }
+}
+
+function showRemoveConfirmation() {
+    // Mostrar el mensaje de confirmación debajo de los botones
+    document.getElementById('remove-confirmation').style.display = 'block';
+    
+    // Hacer scroll para ver todo el div de confirmación + bottom padding
+    setTimeout(() => {
+        const confirmationElement = document.getElementById('remove-confirmation');
+        if (confirmationElement) {
+            // Scroll hasta mostrar todo el mensaje con padding extra
+            confirmationElement.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'end'
+            });
+            
+            // Scroll adicional para mostrar el bottom padding
+            setTimeout(() => {
+                window.scrollBy({
+                    top: 50,
+                    behavior: 'smooth'
+                });
+            }, 300);
+        }
+    }, 100);
+}
+
+function confirmRemoveCriteria() {
+    if (allCriteria.length > 0 && currentCriteriaIndex < allCriteria.length) {
+        // Guardar el criterio que se va a eliminar para el undo
+        const removedCriteria = JSON.parse(JSON.stringify(allCriteria[currentCriteriaIndex]));
+        const removedIndex = currentCriteriaIndex;
+        const criteriaTitle = removedCriteria.title || 'criteria';
+        
+        // Eliminar el criterio actual
+        allCriteria.splice(currentCriteriaIndex, 1);
+        
+        // Ajustar índice actual
+        if (allCriteria.length === 0) {
+            currentCriteriaIndex = 0;
+        } else if (currentCriteriaIndex >= allCriteria.length) {
+            currentCriteriaIndex = allCriteria.length - 1;
+        }
+        
+        // Cerrar modal
+        closeInvestmentModal();
+        
+        // Actualizar visualización
+        updateInvestmentCriteriaDisplay();
+        
+        // Ocultar mensaje de confirmación
+        document.getElementById('remove-confirmation').style.display = 'none';
+        
+        // Mostrar toast de eliminación
+        setTimeout(() => {
+            showRemoveToast(criteriaTitle, removedCriteria, removedIndex);
+        }, 100);
+        
+        // Limpiar estado anterior
+        previousCriteriaState = null;
+    }
+}
+
+function undoRemove() {
+    if (window.lastRemovedCriteria) {
+        const { criteria, index } = window.lastRemovedCriteria;
+        
+        // Restaurar el criterio en su posición original
+        allCriteria.splice(index, 0, criteria);
+        
+        // Ir al criterio restaurado
+        currentCriteriaIndex = index;
+        
+        // Actualizar visualización
+        updateInvestmentCriteriaDisplay();
+        
+        // Hacer blink del panel
+        setTimeout(() => {
+            blinkInvestmentPanel();
+        }, 100);
+        
+        // Limpiar datos del undo
+        window.lastRemovedCriteria = null;
+        
+        // Ocultar toast
+        hideToast();
+    }
+}
+
+// Función legacy mantenida por compatibilidad
+function removeCriteria() {
+    showRemoveConfirmation();
+}
+
+function clearModalForm() {
+    // Limpiar inputs de texto
+    document.getElementById('criteria-title').value = '';
+    document.getElementById('criteria-description').value = '';
+    document.getElementById('revenue-min').value = '';
+    document.getElementById('revenue-max').value = '';
+    document.getElementById('ebitda-min').value = '';
+    document.getElementById('ebitda-max').value = '';
+    
+    // Desmarcar todos los checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('input[type="radio"]').forEach(rb => rb.checked = false);
+}
+
+function blinkInvestmentPanel() {
+    // DIRTY: Buscar elemento y hacer scroll + blink
+    const element = document.querySelector('.investment-criteria-dynamic') || 
+                   document.querySelector('[class*="investment-criteria"]') ||
+                   document.querySelector('[class*="criteria-dynamic"]');
+    
+    if (element) {
+        // Scroll más suave, no tan arriba
+        const rect = element.getBoundingClientRect();
+        const offset = window.pageYOffset + rect.top - 200; // 200px desde arriba
+        window.scrollTo(0, offset);
+        
+        setTimeout(() => {
+            element.classList.add('criteria-highlight');
+            setTimeout(() => {
+                element.classList.remove('criteria-highlight');
+            }, 1000);
+        }, 100);
+    } else {
+        // Fallback: scroll fijo
+        window.scrollTo(0, 600);
+    }
+}
+
 // Expose functions globally
 window.navigateCriteria = navigateCriteria;
+window.undoLastCriteria = undoLastCriteria;
+window.undoEdit = undoEdit;
+window.undoRemove = undoRemove;
+window.removeCriteria = removeCriteria;
+window.showRemoveConfirmation = showRemoveConfirmation;
+window.confirmRemoveCriteria = confirmRemoveCriteria;
+window.hideToast = hideToast;
+window.openNewCriteriaModal = openNewCriteriaModal;
+window.handleSaveCriteria = handleSaveCriteria;
 window.goToCriteria = goToCriteria;
 window.navigateModalCriteria = navigateModalCriteria;
 window.debugCriteriaState = debugCriteriaState;
@@ -734,7 +1261,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar datos iniciales al cargar la página
     loadInitialData();
 });
-
 // Additional fallback call
 console.log('Script loaded, forcing loadInitialData...');
 if (typeof loadInitialData === 'function') {

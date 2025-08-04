@@ -573,9 +573,24 @@
                     </div>
                 </div>
             </div>
+            
             <div class="modal-footer">
-                <button class="cancel-btn" onclick="closeInvestmentModal()">Cancel</button>
-                <button class="save-btn" onclick="saveInvestmentCriteria()">Save</button>
+                <!-- Remove criteria button (solo en edición) -->
+                <button class="remove-criteria-btn" id="remove-criteria-btn" onclick="showRemoveConfirmation()" style="display: none;">Remove criteria</button>
+                
+                <div class="modal-footer-right">
+                    <button class="cancel-btn" onclick="closeInvestmentModal()">Cancel</button>
+                    <button class="save-btn" onclick="handleSaveCriteria()">Save</button>
+                </div>
+            </div>
+            
+            <!-- Remove confirmation message DEBAJO de los botones -->
+            <div class="remove-confirmation" id="remove-confirmation" style="display: none;">
+                <div class="confirmation-content">
+                    <div class="confirmation-icon">🗑️</div>
+                    <div class="confirmation-text">This action will remove the selected criteria. Are you sure you want to continue?</div>
+                    <button class="yes-remove-btn" onclick="confirmRemoveCriteria()">Yes, remove</button>
+                </div>
             </div>
         </div>
     </div>
