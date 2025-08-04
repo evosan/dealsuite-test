@@ -536,24 +536,8 @@ function updateInvestmentCriteriaDisplay() {
         
         // Añadir banner según el número de cards con contenido
         if (filledCards <= 2) {
-            // Verificar si es el primer criterio con 0-2 cards
-            let isFirstWithFewCards = true;
-            for (let i = 0; i < currentCriteriaIndex; i++) {
-                const criteria = allCriteria[i];
-                let otherFilledCards = 0;
-                if (criteria.growth.length > 0) otherFilledCards++;
-                if (criteria.profitability.length > 0 || criteria.equity.length > 0) otherFilledCards++;
-                if (criteria.revenueMin || criteria.revenueMax || criteria.ebitdaMin || criteria.ebitdaMax) otherFilledCards++;
-                if (criteria.countries.length > 0) otherFilledCards++;
-                if (criteria.sectors.length > 0) otherFilledCards++;
-                
-                if (otherFilledCards <= 2) {
-                    isFirstWithFewCards = false;
-                    break;
-                }
-            }
-            
-            if (isFirstWithFewCards) {
+            // Solo mostrar banner en los primeros 2 criterios
+            if (currentCriteriaIndex < 2) {
                 // Banner completo para 0-2 cards
                 html += `
                     <div class="criteria-banner">
@@ -566,31 +550,15 @@ function updateInvestmentCriteriaDisplay() {
                         </div>
                     </div>`;
             } else {
-                // Solo texto sutil en criterios posteriores con 0-2 cards
+                // Hint para criterios posteriores con 0-2 cards
                 html += `
                     <div class="criteria-hint">
                         <p class="hint-text">Add more details to improve match quality</p>
                     </div>`;
             }
         } else if (filledCards >= 3 && filledCards <= 4) {
-            // Verificar si es el primer criterio con 3-4 cards
-            let isFirstWithMediumCards = true;
-            for (let i = 0; i < currentCriteriaIndex; i++) {
-                const criteria = allCriteria[i];
-                let otherFilledCards = 0;
-                if (criteria.growth.length > 0) otherFilledCards++;
-                if (criteria.profitability.length > 0 || criteria.equity.length > 0) otherFilledCards++;
-                if (criteria.revenueMin || criteria.revenueMax || criteria.ebitdaMin || criteria.ebitdaMax) otherFilledCards++;
-                if (criteria.countries.length > 0) otherFilledCards++;
-                if (criteria.sectors.length > 0) otherFilledCards++;
-                
-                if (otherFilledCards >= 3 && otherFilledCards <= 4) {
-                    isFirstWithMediumCards = false;
-                    break;
-                }
-            }
-            
-            if (isFirstWithMediumCards) {
+            // Solo mostrar banner en los primeros 2 criterios
+            if (currentCriteriaIndex < 2) {
                 // Banner completo para 3-4 cards
                 html += `
                     <div class="criteria-banner">
@@ -603,14 +571,19 @@ function updateInvestmentCriteriaDisplay() {
                         </div>
                     </div>`;
             } else {
-                // Solo texto sutil en criterios posteriores con 3-4 cards
+                // Hint para criterios posteriores con 3-4 cards
                 html += `
                     <div class="criteria-hint">
                         <p class="hint-text">Add more details to improve match quality</p>
                     </div>`;
             }
+        } else if (filledCards >= 5) {
+            // 5+ cards: Siempre mostrar hint (sin banner)
+            html += `
+                <div class="criteria-hint">
+                    <p class="hint-text">Add more details to improve match quality</p>
+                </div>`;
         }
-        // 5+ cards: Sin banner (criterio completo)
 
         // Cerrar el grid
         html += '</div>';
