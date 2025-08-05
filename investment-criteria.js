@@ -569,7 +569,7 @@ function updateInvestmentCriteriaDisplay() {
                 // Hint para criterios posteriores con 0-2 cards
                 html += `
                     <div class="criteria-hint">
-                        <p class="hint-text">Add more details to improve match quality</p>
+                        <p class="hint-text">Add more details to improve match quality<br><a href="#" class="hint-link" onclick="openInvestmentModal(); return false;">Add more criteria</a></p>
                     </div>`;
             }
         } else if (filledCards >= 3 && filledCards <= 4) {
@@ -606,7 +606,7 @@ function updateInvestmentCriteriaDisplay() {
                 // Hint para criterios posteriores con 3-4 cards
                 html += `
                     <div class="criteria-hint">
-                        <p class="hint-text">Add more details to improve match quality</p>
+                        <p class="hint-text">Add more details to improve match quality<br><a href="#" class="hint-link" onclick="openInvestmentModal(); return false;">Add more criteria</a></p>
                     </div>`;
             }
         } else if (filledCards >= 5) {
