@@ -558,7 +558,7 @@ function updateInvestmentCriteriaDisplay() {
                 html += `
                     <div class="criteria-banner">
                         <div class="banner-illustration">
-                            <img src="http://localhost:3845/assets/177c2b0ea0ab3bb3fc3dcebac1c57dfea38e2f9d.png" alt="Add criteria illustration" width="168" height="96" />
+                            <img src="assets/img.png" alt="Add criteria illustration" width="168" height="96" />
                         </div>
                         <div class="banner-content">
                             <p class="banner-text">Most buyers who define at least 3 criteria receive significantly better matches.</p>
@@ -595,7 +595,7 @@ function updateInvestmentCriteriaDisplay() {
                 html += `
                     <div class="criteria-banner">
                         <div class="banner-illustration">
-                            <img src="http://localhost:3845/assets/795bf570314b3bf842d3c6e35131a3d9788099eb.png" alt="Analytics illustration" width="168" height="96" />
+                            <img src="assets/img2.png" alt="Analytics illustration" width="168" height="96" />
                         </div>
                         <div class="banner-content">
                             <p class="banner-text">Top buyers define all criteria and receive personalized matches and better opportunities</p>
@@ -679,9 +679,25 @@ function loadInitialData() {
         const titleElement = document.getElementById('criteria-title');
         if (titleElement) {
             titleElement.value = `Investment Criteria ${criteriaCounter}`;
+            
+            // AÑADIR: Seleccionar sectores por defecto en el formulario
+            setTimeout(() => {
+                const defaultSectors = ['agri-food', 'automobile', 'banks'];
+                defaultSectors.forEach(sectorId => {
+                    const checkbox = document.querySelector(`input[type="checkbox"][value="${sectorId}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            }, 10);
+            
             // Marcar como nuevo criterio para la carga inicial
             isEditingExisting = false;
-            saveInvestmentCriteria();
+            
+            // Esperar un poco para que se seleccionen los sectores antes de guardar
+            setTimeout(() => {
+                saveInvestmentCriteria();
+            }, 50);
         }
     }
 }
